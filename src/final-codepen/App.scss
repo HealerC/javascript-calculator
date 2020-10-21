@@ -1,0 +1,338 @@
+/* Colour Palette */
+$calculatorBlue: #5DA2D5;
+$displayColor: #90CCF4;
+$buttonColor: #ECECEC;
+$operatorColor: #F3D250;
+$clearColor: #ED3237;
+#displayPanel, #buttonPanel {
+  box-sizing: border-box;  
+  
+  /* So the text in the app cannot be selected. */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10+ and Edge */
+  user-select: none; /* Standard syntax */
+}
+
+/* The default button properties. The special operator, clear and
+equals button will have different colors */
+button {
+  height: 60px;
+  background-color: $buttonColor;
+  border: none;
+  color: rgba(0, 0, 0, 0.8);
+}
+button:hover {
+  background-color: darken($buttonColor, 5%);
+}
+button:active {
+  background-color: darken($buttonColor, 10%);
+}
+button:focus {
+  outline: none;
+}
+/* The operator buttons (*, /, +, -) */
+button.operator {
+  background-color: $operatorColor;
+}
+button.operator:hover {
+  background-color: darken($operatorColor, 5%);
+}
+button.operator:active {
+  background-color: darken($operatorColor, 10%)
+  
+}
+
+/* The clear button */
+button#clear {
+  background-color: $clearColor;
+  color: white;
+  font-weight: bold;
+}
+button#clear:hover {
+  background-color: darken($clearColor, 5%);
+}
+button#clear:active {
+  background-color: darken($clearColor, 10%)
+}
+
+/* The big equal to button */
+button#equals {
+  background-color: green;
+  color: white;
+}
+button#equals:hover {
+  background-color: darken(green, 5%)
+}
+button#equals:active {
+  background-color: darken(green, 10%)
+}
+/* The fontawesome icons on the display. If this is not set
+the icons are at the same level with the numbers vertically */
+#display i {
+  font-size: 0.5em;
+  vertical-align: 0.2em;
+  margin: 0 0.2em;
+}
+
+/* App */
+html, body {
+  height: 100%;
+  font-family: "Roboto", sans-serif;
+}
+body {
+  background-color: #F3F3F4;
+  position: relative;
+}
+#calculator-app {
+  width: 25%;             // On bigger screen devices
+  background-color: $calculatorBlue;
+  
+  /* Horizontal and vertical centering*/
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+  
+  /* The display showing the expression and the result*/
+  #displayPanel {
+    background-color: $displayColor;
+    color: white;
+    margin-top: 1em;
+    padding-top: 0.1em;
+    padding-right: 1em;
+    text-align: right;
+    
+    #display, #auxiliary {
+      padding-left: 0.5em;
+      
+      /* So that very long numbers do not go outside the calculator*/
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;  
+    }
+    #display {
+      margin-bottom: 0;
+    }
+    #auxiliary {
+      margin-top: 0;
+      color: hsla(360, 100%, 100%, 0.5);  // A white transparent text 
+    }
+    
+  }
+  
+  /* The buttons the user clicks to input numbers/operators */
+  #buttonPanel {
+    padding: 1em;
+    margin: 0;
+    padding-top: 0;
+    
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 0.3em;
+    
+    button {
+      border-radius: 0.5em;
+      font-size: 1.3em;
+    }
+    #equals {
+      height: initial;
+      grid-row: 4 / span 2;       // The equals button is one of the biggest
+      grid-column: 4 / 5;
+    }
+    #zero {
+      grid-column: 1 / span 2;    // The zero button is equally as big
+    }
+    #divide, #multiply, #backspace, #add, #subtract {
+      font-size: 1em;             // These have fontawesome icons that look 
+                                  // better when they are smaller in size
+    }
+    
+  }
+  
+  #historyPanel {
+    /* The history panel shows at the right of the calculator 
+    in a vertical position on bigger screens*/
+    position: absolute;
+    top: 60%;
+    left: 100%;
+    -ms-transform: translate(-100%, -60%);
+    transform: translate(-100%, -60%);
+    
+    #history-toggle {
+      background-color: $clearColor;
+      color: white;
+      font-size: smaller;
+      width: 0.8em;
+      height: 10em;
+      
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      border-top-left-radius: 1em;
+      border-bottom-left-radius: 1em;
+    }
+    #history-toggle:hover {
+      background-color: darken($clearColor, 5%);
+    }
+    #calc-history {
+      /* The particular panel that shows all the past calculations done 
+      if the user wants to see them.*/
+      visibility: hidden;                 // It will be shown if the user wants
+      background-color: white;
+      border-right: 3px solid $clearColor;
+      
+      /* The position and size of the panel*/
+      position: absolute;   
+      top: -4em;
+      left: 0.5em;
+      z-index: -1;
+      width: 0;
+      height: 45vh;
+      
+      text-align: right;
+      padding-right: 0.5em;
+      padding-left: 1em;
+      
+      overflow-y: auto;
+      overflow-x: hidden;     // I don't want a horizontal scroll
+      
+      transition-property: width, visibility;
+      transition-duration: 1s;
+      transition-delay: 0s;
+      
+      #history-icon {
+        color: $operatorColor;
+        margin-right: 50%;            // To centralize the icon
+        margin-left: 50%;             // Surprisingly margin: auto; didn't work here
+        padding-top: 0.5em;
+      }
+      #history {
+        /* The history items itself. Represented by the expression and it's
+        result and separated from each other by dashes. The last item has no dash */
+        div {
+          border-bottom: 3px dashed $clearColor;
+          
+          p {
+            line-height: 0;
+          }
+        }
+        div:last-child {
+          border-bottom: none;
+        }
+      } 
+      #wrapper {
+        // The wrapper for which the clear history's position is possible
+        // I personally do not understand how it works
+        
+        position: relative;
+        
+        #clear-history {
+          background-color: rgba(0, 0, 0, 0.1);
+          border: 2px solid transparentize(gray, 0.7);
+          position: fixed;      // It doesn't position relative to the window
+                                // because its wrapper is relative
+          padding: 1em;
+          border-radius: 50%;
+          top: 130%;
+          left: 80px;
+          
+          transition-property: background-color;
+          transition-duration: 0.3s;
+          transition-delay: 0;
+          i {
+            font-size: larger;
+          }
+        }
+        #clear-history:hover {
+          background-color: rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+}
+#info {
+  position: absolute;         // The info shows under the calculator
+  text-align: center;
+  a:link, a:visited {
+    color: $calculatorBlue;
+    text-decoration: none;
+  }
+  a:hover, a:active {
+    text-decoration: underline;
+  }
+  #instructions {
+    font-family: "Courier New", monospace;
+    font-size: smaller;
+    b {
+      color: $clearColor;
+    }
+  }
+}
+@media only screen and (max-width: 1200px) {
+  #calculator-app {
+    width: 35%;
+    #historyPanel {
+      #calc-history {
+        height: 25vh;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  #calculator-app {
+    width: 40%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  #calculator-app {
+    width: 45%;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  #calculator-app {
+    width: 55%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  /* Here everything changes. The history toggle is now 
+  underneath the app */
+  #calculator-app {
+    width: 90%;           // The app occupies the full screen
+    
+    #historyPanel {
+      top: 103%;          // Its now under the calculator
+      left: 50%; 
+      #history-toggle {
+        transform: rotate(-90deg);    // And its toggle is horizontal now
+      }
+      #calc-history {     // The white calc history panel that should be under the toggle
+        top: 4em;
+        left: -6em;
+        width: 50vw;      // Now its width property is set
+        height: 0;        // While it's height will be controlled by the program
+      
+        transition-property: height, visibility;
+        transition-duration: 1s;
+        transition-delay: 0s;
+      }
+    }
+    
+    #info {
+      // The info shows on top of the calculator on phones with smaller screens
+      top: -4em;
+      #me {
+        margin-bottom: 0;
+        line-height: 0;
+      }
+    }
+  }
+}
