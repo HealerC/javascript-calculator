@@ -2,7 +2,7 @@
 Freecodecamp's [build a javscript calculator](https://www.freecodecamp.org/learn/front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator).
 Front end libraries certification. 
 *This is source code of the app and build*
-Here's the submitted project on codepen: [Simple Calculator](https://codepen.io/HealerC/pen/abNxqGY)
+Here's the submitted project on codepen: [Simple Calculator](https://codepen.io/HealerC/full/abNxqGY)
 The app on netlify is: [Simple Calculator](https://hcalculator.netlify.app)
 
 ## Features
